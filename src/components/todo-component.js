@@ -7,8 +7,7 @@ export default class TodoComponent extends Component {
 
     this.state = {
       newTask: "",
-      tasksList: [],
-      isCompleted: false
+      tasksList: []
     }
   }
 
@@ -23,37 +22,48 @@ export default class TodoComponent extends Component {
     e.preventDefault();
     this.setState({
       newTask: "",
-      tasksList:[...this.state.tasksList, this.state.newTask]
+      tasksList:[
+        ...this.state.tasksList, 
+        {
+          text: this.state.newTask,
+          isChecked: false
+        }]
     });
   }
 
-  removeTask(id) {
-    var updatedTasksList = this.state.tasksList.splice(id, 1)    
+  completeTask(id) {
+    const completedTodos = [...this.state.tasksList];
+    completedTodos[id].isChecked = !completedTodos[id].isChecked;
     this.setState({
-      updatedTasksList
+      completedTodos
     })
   }
 
-  completeTask(id) {
+  updateTask(task) {
+    console.log(task.text);
+  }
+
+  removeTask(id) {
+    const updatedTasksList = this.state.tasksList.splice(id, 1)    
     this.setState({
-      isCompleted : !this.state.isCompleted
+      updatedTasksList
     })
-    console.log(id + " " + this.state.isCompleted);
   }
 
   render(){
 
     const {
       newTask,
-      tasksList,
-      isCompleted
+      tasksList
     } = this.state;
 
     const tasksListItems = tasksList.map((task, id) =>
-        <li key={id}>
-          <input type="checkbox" onClick={()=>this.completeTask(id)}/>
-          <span className={isCompleted ? "completed" : ""}>{task}</span> <button onClick={()=>this.removeTask(id)}>remove</button>
-        </li>
+      <li key={id}>
+        <input type="checkbox" onClick={()=>this.completeTask(id)}/>
+        <span style={{textDecoration: task.isChecked ? "line-through" : null}}>{task.text}</span> 
+        <button onClick={()=>this.updateTask(task)}>update</button>
+        <button onClick={()=>this.removeTask(id)}>remove</button>
+      </li>
     )
 
     return(
