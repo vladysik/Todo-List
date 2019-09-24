@@ -11,10 +11,9 @@ export default class TodoComponent extends Component {
     }
   }
 
-  onChange = (e) => {
-    e.preventDefault();
+  onChange = ({target: {value}}) => {
     this.setState({
-      newTask: e.target.value
+      newTask: value
     });
   }
 
@@ -39,10 +38,6 @@ export default class TodoComponent extends Component {
     })
   }
 
-  updateTask(task) {
-    console.log(task.text);
-  }
-
   removeTask(id) {
     const updatedTasksList = this.state.tasksList.splice(id, 1)    
     this.setState({
@@ -60,8 +55,7 @@ export default class TodoComponent extends Component {
     const tasksListItems = tasksList.map((task, id) =>
       <li key={id}>
         <input type="checkbox" onClick={()=>this.completeTask(id)}/>
-        <span style={{textDecoration: task.isChecked ? "line-through" : null}}>{task.text}</span> 
-        <button onClick={()=>this.updateTask(task)}>update</button>
+        <span style={{textDecoration: task.isChecked ? "line-through" : null}}>{task.text}</span>
         <button onClick={()=>this.removeTask(id)}>remove</button>
       </li>
     )
