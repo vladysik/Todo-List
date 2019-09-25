@@ -17,6 +17,14 @@ export default class TodoComponent extends Component {
     });
   }
 
+  onEdit = (e, id) => {
+    const updatedTasks = [...this.state.tasksList];
+    updatedTasks[id].text = e.target.value;
+    this.setState({
+      updatedTasks
+    })
+  }
+
   addTask = (e) => {
     e.preventDefault();
     this.setState({
@@ -25,16 +33,34 @@ export default class TodoComponent extends Component {
         ...this.state.tasksList, 
         {
           text: this.state.newTask,
-          isChecked: false
+          isChecked: false,
+          isEdit: false
         }]
     });
   }
 
-  completeTask(id) {
-    const completedTodos = [...this.state.tasksList];
-    completedTodos[id].isChecked = !completedTodos[id].isChecked;
+  checkedTask(id) {
+    const checkedTasks = [...this.state.tasksList];
+    checkedTasks[id].isChecked = !checkedTasks[id].isChecked;
     this.setState({
-      completedTodos
+      checkedTasks
+    })
+  }
+
+  editModeTask(id) {
+    const editTasks = [...this.state.tasksList];
+    editTasks[id].isEdit = !editTasks[id].isEdit;
+    editTasks.splice(id, 0)
+    this.setState({
+      editTasks
+    })
+  }
+
+  editTask(id){
+    const updatedTasks = [...this.state.tasksList];
+    updatedTasks[id].isEdit = !updatedTasks[id].isEdit;
+    this.setState({
+      updatedTasks
     })
   }
 
@@ -52,15 +78,22 @@ export default class TodoComponent extends Component {
       tasksList
     } = this.state;
 
-    const tasksListItems = tasksList.map((task, id) =>
-      <li key={id}>
-        <input type="checkbox" onClick={()=>this.completeTask(id)}/>
-        <span style={{textDecoration: task.isChecked ? "line-through" : null}}>{task.text}</span>
-        <button onClick={()=>this.removeTask(id)}>remove</button>
-      </li>
-    )
+    const tasksListItems = tasksList.map((task, id) => {
+      return task.isEdit ?
+        <li key={id}>
+          <input type="text" value={task.text} onChange={(e)=>this.onEdit(e, id)}/>
+          <button onClick={()=>this.editTask(id)}>ok</button>
+        </li>
+        :
+        <li key={id}>
+          <input type="checkbox" onClick={()=>this.checkedTask(id)}/>
+          <span style={{textDecoration: task.isChecked ? "line-through" : null}}>{task.text}</span>
+          <button onClick={()=>this.editModeTask(id)}>edit</button>
+          <button onClick={()=>this.removeTask(id)}>remove</button>
+        </li>
+    })
 
-    return(
+    return (
 
       <div className="todo__wrapper">
         <form>
