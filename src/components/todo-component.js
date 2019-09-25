@@ -17,9 +17,9 @@ export default class TodoComponent extends Component {
     });
   }
 
-  onEdit = (e, id) => {
+  onEdit = ({target: {value}}, id) => {
     const updatedTasks = [...this.state.tasksList];
-    updatedTasks[id].text = e.target.value;
+    updatedTasks[id].text = value;
     this.setState({
       updatedTasks
     })
