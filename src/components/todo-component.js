@@ -27,16 +27,16 @@ export default class TodoComponent extends Component {
 
   addTask = (e) => {
     e.preventDefault();
-    this.setState({
+    this.setState((state)=>({
       newTask: "",
       tasksList:[
-        ...this.state.tasksList, 
+        ...state.tasksList, 
         {
-          text: this.state.newTask,
+          text: state.newTask,
           isChecked: false,
           isEdit: false
         }]
-    });
+    }));
   }
 
   checkedTask(id) {
