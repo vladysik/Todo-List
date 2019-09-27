@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import Button from './button.js';
+
 export default class TodoComponent extends Component {
 
   constructor(props){
@@ -7,7 +9,8 @@ export default class TodoComponent extends Component {
 
     this.state = {
       newTask: "",
-      tasksList: []
+      tasksList: [],
+      error: false
     }
   }
 
@@ -27,16 +30,23 @@ export default class TodoComponent extends Component {
 
   addTask = (e) => {
     e.preventDefault();
-    this.setState((state)=>({
-      newTask: "",
-      tasksList:[
-        ...state.tasksList, 
-        {
-          text: state.newTask,
-          isChecked: false,
-          isEdit: false
-        }]
-    }));
+    if (this.state.newTask !== "") {
+      this.setState((state)=>({
+        newTask: "",
+        tasksList:[
+          ...state.tasksList, 
+          {
+            text: state.newTask,
+            isChecked: false,
+            isEdit: false
+          }],
+        error: false
+      }));
+    } else {
+      this.setState({
+        error: true
+      });
+    }
   }
 
   checkedTask(id) {
@@ -75,21 +85,22 @@ export default class TodoComponent extends Component {
 
     const {
       newTask,
-      tasksList
+      tasksList,
+      error
     } = this.state;
 
     const tasksListItems = tasksList.map((task, id) => {
       return task.isEdit ?
         <li key={id}>
           <input type="text" value={task.text} onChange={(e)=>this.onEdit(e, id)}/>
-          <button onClick={()=>this.editTask(id)}>ok</button>
+          <Button onClick={()=>this.editTask(id)} text="ok"/>
         </li>
         :
         <li key={id}>
           <input type="checkbox" onClick={()=>this.checkedTask(id)}/>
           <span style={{textDecoration: task.isChecked ? "line-through" : null}}>{task.text}</span>
-          <button onClick={()=>this.editModeTask(id)}>edit</button>
-          <button onClick={()=>this.removeTask(id)}>remove</button>
+          <Button onClick={()=>this.editModeTask(id)} text="edit"/>
+          <Button onClick={()=>this.removeTask(id)} text="remove"/>
         </li>
     })
 
@@ -98,11 +109,12 @@ export default class TodoComponent extends Component {
       <div className="todo__wrapper">
         <form>
           <input type="text" placeholder="write a task" value={newTask} onChange={this.onChange}/>
-          <button onClick={this.addTask}>add</button>
+          <Button onClick={this.addTask} text="add"/>
         </form>
         <ul>
           {tasksListItems}
         </ul>
+        <p style={{display: error !== true ? "none" : "block"}}>error. please, write a task</p>
       </div>
 
     );
