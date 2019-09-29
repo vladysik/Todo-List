@@ -49,7 +49,7 @@ export default class TodoComponent extends Component {
     }
   }
 
-  checkedTask(id) {
+  checkedTask = (id) => {
     const checkedTasks = [...this.state.tasksList];
     checkedTasks[id].isChecked = !checkedTasks[id].isChecked;
     this.setState({
@@ -57,7 +57,7 @@ export default class TodoComponent extends Component {
     })
   }
 
-  editModeTask(id) {
+  editModeTask = (id) => {
     const editTasks = [...this.state.tasksList];
     editTasks[id].isEdit = !editTasks[id].isEdit;
     editTasks.splice(id, 0)
@@ -66,7 +66,7 @@ export default class TodoComponent extends Component {
     })
   }
 
-  editTask(id){
+  editTask = (id) => {
     const updatedTasks = [...this.state.tasksList];
     updatedTasks[id].isEdit = !updatedTasks[id].isEdit;
     this.setState({
@@ -74,7 +74,7 @@ export default class TodoComponent extends Component {
     })
   }
 
-  removeTask(id) {
+  removeTask = (id) => {
     const updatedTasksList = this.state.tasksList.splice(id, 1)    
     this.setState({
       updatedTasksList
@@ -92,15 +92,15 @@ export default class TodoComponent extends Component {
     const tasksListItems = tasksList.map((task, id) => {
       return task.isEdit ?
         <li key={id}>
-          <input type="text" value={task.text} onChange={(e)=>this.onEdit(e, id)}/>
-          <Button onClick={()=>this.editTask(id)} text="ok"/>
+          <input type="text" value={task.text} onChange={(e) => this.onEdit(e, id)}/>
+          <Button onClick={this.editTask.bind(this, id)} text="ok"/>
         </li>
         :
         <li key={id}>
-          <input type="checkbox" onClick={()=>this.checkedTask(id)}/>
+          <input type="checkbox" onClick={this.checkedTask.bind(this, id)}/>
           <span style={{textDecoration: task.isChecked ? "line-through" : null}}>{task.text}</span>
-          <Button onClick={()=>this.editModeTask(id)} text="edit"/>
-          <Button onClick={()=>this.removeTask(id)} text="remove"/>
+          <Button onClick={this.editModeTask.bind(this, id)} text="edit"/>
+          <Button onClick={this.removeTask.bind(this, id)} text="remove"/>
         </li>
     })
 
