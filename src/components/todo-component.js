@@ -90,18 +90,21 @@ export default class TodoComponent extends Component {
     } = this.state;
 
     const tasksListItems = tasksList.map((task, id) => {
-      return task.isEdit ?
-        <li key={id}>
-          <input type="text" value={task.text} onChange={(e) => this.onEdit(e, id)}/>
-          <Button onClick={this.editTask.bind(this, id)} text="ok"/>
-        </li>
-        :
-        <li key={id}>
-          <input type="checkbox" onClick={this.checkedTask.bind(this, id)}/>
-          <span style={{textDecoration: task.isChecked ? "line-through" : null}}>{task.text}</span>
-          <Button onClick={this.editModeTask.bind(this, id)} text="edit"/>
-          <Button onClick={this.removeTask.bind(this, id)} text="remove"/>
-        </li>
+      return (
+        task.isEdit ? (
+            <li key={id}>
+              <input type="text" value={task.text} onChange={(e) => this.onEdit(e, id)}/>
+              <Button onClick={this.editTask.bind(this, id)} text="ok"/>
+            </li>
+          ) : (
+            <li key={id}>
+              <input type="checkbox" onClick={this.checkedTask.bind(this, id)}/>
+              <span style={{textDecoration: task.isChecked ? "line-through" : null}}>{task.text}</span>
+              <Button onClick={this.editModeTask.bind(this, id)} text="edit"/>
+              <Button onClick={this.removeTask.bind(this, id)} text="remove"/>
+            </li>
+          )
+      )
     })
 
     return (
