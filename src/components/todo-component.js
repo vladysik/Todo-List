@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
-import Button from './button.js';
+import Task from './todo.js';
 
 export default class TodoComponent extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -14,13 +14,13 @@ export default class TodoComponent extends Component {
     }
   }
 
-  onChange = ({target: {value}}) => {
+  onChange = ({ target: { value } }) => {
     this.setState({
       newTask: value
     });
   }
 
-  onEdit = ({target: {value}}, id) => {
+  onEdit = ({ target: { value } }, id) => {
     const updatedTasks = [...this.state.tasksList];
     updatedTasks[id].text = value;
     this.setState({
@@ -31,10 +31,10 @@ export default class TodoComponent extends Component {
   addTask = (e) => {
     e.preventDefault();
     if (this.state.newTask !== "") {
-      this.setState((state)=>({
+      this.setState((state) => ({
         newTask: "",
-        tasksList:[
-          ...state.tasksList, 
+        tasksList: [
+          ...state.tasksList,
           {
             text: state.newTask,
             isChecked: false,
@@ -75,13 +75,13 @@ export default class TodoComponent extends Component {
   }
 
   removeTask = (id) => {
-    const updatedTasksList = this.state.tasksList.splice(id, 1)    
+    const updatedTasksList = this.state.tasksList.splice(id, 1)
     this.setState({
       updatedTasksList
     })
   }
 
-  render(){
+  render() {
 
     const {
       newTask,
@@ -90,34 +90,29 @@ export default class TodoComponent extends Component {
     } = this.state;
 
     const tasksListItems = tasksList.map((task, id) => {
-      return (
-        task.isEdit ? (
-            <li key={id}>
-              <input type="text" value={task.text} onChange={(e) => this.onEdit(e, id)}/>
-              <Button onClick={this.editTask.bind(this, id)} text="ok"/>
-            </li>
-          ) : (
-            <li key={id}>
-              <input type="checkbox" onClick={this.checkedTask.bind(this, id)}/>
-              <span style={{textDecoration: task.isChecked ? "line-through" : null}}>{task.text}</span>
-              <Button onClick={this.editModeTask.bind(this, id)} text="edit"/>
-              <Button onClick={this.removeTask.bind(this, id)} text="remove"/>
-            </li>
-          )
-      )
+      return <Task
+        key={id}
+        task={task}
+        id={id}
+        onEdit={this.onEdit}
+        onCheckedTask={this.checkedTask}
+        onEditModeTask={this.editModeTask}
+        onEditTask={this.editTask}
+        onRemoveTask={this.removeTask}
+      />;
     })
 
     return (
 
       <div className="todo__wrapper">
         <form>
-          <input type="text" placeholder="write a task" value={newTask} onChange={this.onChange}/>
-          <Button onClick={this.addTask} text="add"/>
+          <input type="text" placeholder="write a task" value={newTask} onChange={this.onChange} />
+          <button onClick={this.addTask}>add</button>
         </form>
         <ul>
           {tasksListItems}
         </ul>
-        <p style={{display: error !== true ? "none" : "block"}}>error. please, write a task</p>
+        <p style={{ display: error !== true ? "none" : "block" }}>error. please, write a task</p>
       </div>
 
     );
